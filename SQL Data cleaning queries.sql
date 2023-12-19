@@ -1,0 +1,82 @@
+create database projects;
+ 
+USE projects;
+ 
+SELECT * from hr;
+ 
+ALTER TABLE hr
+CHANGE COLUMN ï»¿id emp_id VARCHAR(20) NULL;
+ 
+SELECT * from hr;
+ 
+DESC hr;
+
+SELECT birthdate FROM hr;
+
+SET sql_safe_updates = 0;
+
+UPDATE hr
+SET birthdate = CASE 
+	WHEN birthdate LIKE '%/%' THEN date_format(str_to_date(birthdate,'%m/%d/%Y'), '%Y-%m-%d')
+    WHEN birthdate LIKE '%-%' THEN date_format(str_to_date(birthdate,'%m-%d-%Y'), '%Y-%m-%d')
+    ELSE null
+END;
+
+SELECT birthdate FROM hr;
+
+ALTER Table hr
+Modify column birthdate DATE;
+
+SELECT birthdate FROM hr;
+
+DESC hr;
+
+
+UPDATE hr
+SET hire_date= CASE 
+	WHEN hire_date LIKE '%/%' THEN date_format(str_to_date(hire_date,'%m/%d/%Y'), '%Y-%m-%d')
+    WHEN hire_date LIKE '%-%' THEN date_format(str_to_date(hire_date,'%m-%d-%Y'), '%Y-%m-%d')
+    ELSE null
+END;
+
+
+SELECT hire_date FROM hr;
+
+select termdate from hr;
+
+UPDATE hr
+SET termdate = IF(termdate IS NOT NULL AND termdate != '', date(str_to_date(termdate, '%Y-%m-%d %H:%i:%s UTC')), '0000-00-00')
+WHERE true;
+
+SELECT termdate from hr;
+
+SET sql_mode = 'ALLOW_INVALID_DATES';
+
+ALTER TABLE hr
+MODIFY COLUMN termdate DATE;
+
+select termdate from hr;
+
+alter table hr
+modify column hire_date DATE;
+
+
+
+alter table hr
+ADD column age int; 
+
+select * from hr;
+
+update hr
+set age = timestampdiff(YEAR, birthdate, curdate());
+
+select birthdate, age from hr;
+
+select 
+	min(age) as youngest,
+    max(age) as oldest
+from hr;
+
+select count(*)
+from hr
+where age <18;
